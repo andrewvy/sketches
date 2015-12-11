@@ -1,0 +1,8 @@
+[package]
+name = "ex05"
+version = "0.1.0"
+authors = ["Andrew Vy <andrew@andrewvy.com>"]
+
+[lib]
+name = "embed"
+crate-type = ["dylib"]
