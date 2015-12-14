@@ -3,3 +3,7 @@
 This is my transition from [Learn C The Hard Way](http://c.learncodethehardway.org/book/) to Rust.
 
 Mostly, this will just contain practice examples/applications.
+
+Resources:
+
+- [Rust By Example](http://rustbyexample.com/)
