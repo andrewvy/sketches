@@ -2,10 +2,9 @@
 #include <stdlib.h>
 #include <binarytree.h>
 
-void *BTree_init() {
-  BNode *tree = malloc(sizeof(*tree));
+BNode *BTree_init() {
+  BNode *tree = calloc(1, sizeof(BNode));
   check_mem(tree);
-
   return tree;
 
 error:
@@ -15,7 +14,7 @@ error:
 }
 
 BNode *BTree_new_node(int value) {
-  BNode *node = malloc(sizeof(*node));
+  BNode *node = calloc(1, sizeof(*node));
   check_mem(node);
   node->value = value;
   return node;
@@ -25,27 +24,24 @@ error:
   return NULL;
 }
 
-int BTree_insert(BNode *tree, int value) {
-  BNode *node = NULL;
-
-  if (!(value)) {
+int BTree_insert(BNode **tree, int value) {
+  if (!value) {
     return 0;
   }
 
-  if (!(tree)) {
-    node = BTree_new_node(value);
-    check(node != NULL, "Failed to create node");
+  if (!(*tree)) {
+    *tree = BTree_new_node(value);
     return 1;
   }
 
-  if (value < tree->value) {
-    BTree_insert(&tree->left, value);
-  } else if (value > tree->value) {
-    BTree_insert(&tree->right, value);
+  if (value < (*tree)->value) {
+    return BTree_insert(&(*tree)->left, value);
+  } else if (value > (*tree)->value) {
+    return BTree_insert(&(*tree)->right, value);
   }
 
 error:
-  if (node) free(node);
+  if (tree) free(tree);
   return 0;
 }
 
@@ -54,7 +50,7 @@ int BTree_destroy(BNode *tree) {
     return 0;
   }
 
-  BTree_destroy(tree->left);
-  BTree_destroy(tree->right);
+  BTree_destroy(&tree->left);
+  BTree_destroy(&tree->right);
   free(tree);
 }
