@@ -29,6 +29,7 @@ char *all_tests() {
 
   mu_run_test(test_create);
   mu_run_test(test_insert);
+  mu_run_test(test_destroy);
 
   return NULL;
 }

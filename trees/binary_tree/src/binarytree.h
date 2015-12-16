@@ -11,7 +11,7 @@ typedef struct {
 
 BNode *BTree_init();
 BNode *BTree_new_node(int value);
-int BTree_insert(BNode **tree, int value);
+int BTree_insert(BNode *tree, int value);
 int BTree_destroy(BNode *tree);
 
 #endif
