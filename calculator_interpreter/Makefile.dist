@@ -1,0 +1,9 @@
+all:
+	aclocal
+	autoheader
+	glibtoolize --force
+	automake -a --foreign
+	autoconf
+
+configure:
+	./configure
