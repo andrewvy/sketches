@@ -36,3 +36,12 @@ int main() {
 
   return 0;
 }
+
+/*
+ * OUTPUT:
+ *
+ * hash: 265711968975158739, string: string to be hashed
+ * hash: 16475806737078428087, string: 2nd string to be hashed
+ * hash: 18433142659111643900, string: 3rd string to be hashed
+ * hash: 17752961929589360899, string: 4th string to be hashed
+ */
