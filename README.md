@@ -12,3 +12,4 @@ Journal of my research notes / ideas as I try to learn different aspects of CS.
 - [Scratch A Pixel - Computer Graphics from Scratch](https://github.com/andrewvy/sketches/tree/master/scratch_a_pixel)
 - [K&R - The C Programming Language](https://github.com/andrewvy/sketches/tree/master/k_and_r)
 - [ncurses](https://github.com/andrewvy/sketches/tree/master/ncurses)
+- [All Kinds of Hashes](https://github.com/andrewvy/sketches/tree/master/hashes)
