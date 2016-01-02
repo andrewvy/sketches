@@ -15,7 +15,7 @@ typedef enum {
   GET, // GET, register name
   IFG, // IFG, performs next instruction only if b>a
   IFL, // IFL, performs next instruction only if b<a
-  PRT, // PRT, prints stack value
+  PRT, // PRT, pops and prints stack value
   HLT,  // HLT
   UNDEFINED_INS
 } InstructionSet;
@@ -147,7 +147,8 @@ void eval(int instr) {
     }
     case PRT: {
       // print whatever is in the stack
-      printf("%c", (char) stack[sp]);
+      int val_popped = stack[sp--];
+      printf("%c", (char) val_popped);
       break;
     }
     case UNDEFINED_INS: {
