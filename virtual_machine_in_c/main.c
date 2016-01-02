@@ -66,8 +66,8 @@ void mchk(int number) {
   if (sp - number < 0) die("Stack pointer out of bounds");
 }
 
-void skip_instruction(int next_instruction) {
-  ip += SkipTable[next_instruction];
+void skip_instruction() {
+  ip += SkipTable[program[ip+1]];
 }
 
 void eval(int instr) {
@@ -153,7 +153,7 @@ void eval(int instr) {
       // if b > a perform next instruction
       // else skip it
       if (!(b > a)) {
-        skip_instruction(program[ip+1]);
+        skip_instruction();
       }
 
 
@@ -165,7 +165,7 @@ void eval(int instr) {
       // if b < a perform next instruction
       // else skip it
       if (!(b < a)) {
-        skip_instruction(program[ip+1]);
+        skip_instruction();
       }
 
       break;
@@ -176,7 +176,7 @@ void eval(int instr) {
       // if b == a perform next instruction
       // else skip it
       if (!(b == a)) {
-        skip_instruction(program[ip+1]);
+        skip_instruction();
       }
 
       break;
@@ -187,7 +187,7 @@ void eval(int instr) {
       // if b != a perform next instruction
       // else skip it
       if (!(b != a)) {
-        skip_instruction(program[ip+1]);
+        skip_instruction();
       }
 
       break;
