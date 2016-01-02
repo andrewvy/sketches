@@ -135,9 +135,8 @@ void eval(int instr) {
     }
     case IFG: {
       mchk(2);
-      int a = stack[sp--];
-      int b = stack[sp--];
-      sp += 2;
+      int a = stack[sp-1];
+      int b = stack[sp-2];
 
       // if b > a perform next instruction
       // else skip it
@@ -150,8 +149,8 @@ void eval(int instr) {
     }
     case IFL: {
       mchk(2);
-      int a = stack[sp--];
-      int b = stack[sp--];
+      int a = stack[sp-1];
+      int b = stack[sp-2];
 
       // if b < a perform next instruction
       // else skip it
@@ -159,7 +158,6 @@ void eval(int instr) {
         skip_instruction(program[ip+1]);
       }
 
-      sp += 2;
       break;
     }
     case UNDEFINED_INS: {
