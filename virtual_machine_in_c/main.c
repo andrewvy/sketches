@@ -28,6 +28,14 @@ static const char *RegisterNames[] = {
   "A", "B", "C", "D", "E", "F", "SP", "IP"
 };
 
+// How much to advance IP
+static int SkipTable[11] = {
+  [PSH] = 2, [ADD] = 1, [SUB] = 1,
+  [MUL] = 1, [POP] = 1, [SET] = 3,
+  [GET] = 2, [IFG] = 1, [IFL] = 1,
+  [HLT] = 0
+};
+
 #define PROGRAM_SIZE 1024
 #define STACK_SIZE 1024
 int program[PROGRAM_SIZE];
@@ -49,6 +57,10 @@ void pchk(int number) {
 
 void mchk(int number) {
   if (sp - number < 0) die("Stack pointer out of bounds");
+}
+
+void skip_instruction(int next_instruction) {
+  ip += SkipTable[next_instruction];
 }
 
 void eval(int instr) {
@@ -133,7 +145,7 @@ void eval(int instr) {
       // This is wrong, as we need to increment IP multiple times
       // based on the following instruction
       if (!(b > a)) {
-        ip++;
+        skip_instruction(program[ip+1]);
       }
 
 
@@ -150,7 +162,7 @@ void eval(int instr) {
       // This is wrong, as we need to increment IP multiple times
       // based on the following instruction
       if (!(b < a)) {
-        ip++;
+        skip_instruction(program[ip+1]);
       }
 
       sp += 2;
