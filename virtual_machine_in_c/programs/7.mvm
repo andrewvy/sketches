@@ -1,0 +1,17 @@
+# IFE and IFN
+PSH 1
+PSH 1
+IFN
+# should skip this
+SET A 2
+IFE
+# should do this
+SET B 2
+HLT
+# ------
+# output:
+# PUSH 1
+# PUSH 1
+# SET REG B TO 2
+# Halted successfully.
+# ------

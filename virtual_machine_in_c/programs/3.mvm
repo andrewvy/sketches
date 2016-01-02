@@ -5,3 +5,10 @@ IFG
 SET B 1
 SET A 1
 HLT
+# ------
+# output:
+# PUSH 1
+# PUSH 2
+# SET REG A TO 1
+# Halted successfully.
+# ------

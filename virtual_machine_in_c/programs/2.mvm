@@ -4,3 +4,10 @@ PSH 1
 PSH 2
 ADD
 HLT
+# ------
+# output:
+# PUSH 1
+# PUSH 2
+# ADD 3
+# Halted successfully.
+# ------

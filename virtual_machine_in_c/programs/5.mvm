@@ -26,3 +26,21 @@ PRT
 PRT
 PRT
 HLT
+# ------
+# output:
+# PUSH 10
+# ADDN 33
+# ADDN 100
+# ADDN 108
+# ADDN 114
+# SUBN 111
+# ADDN 119
+# SUBN 32
+# ADDN 111
+# SUBN 108
+# ADDN 108
+# SUBN 101
+# SUBN 72
+# Hello world!
+# Halted successfully.
+# ------

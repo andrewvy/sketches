@@ -18,6 +18,8 @@ typedef enum {
   GET, // GET, register name
   IFG, // IFG, performs next instruction only if b>a
   IFL, // IFL, performs next instruction only if b<a
+  IFE, // IFE, performs next instruction only if b == a
+  IFN, // IFN, performs next instruction only if b != a
   PRT, // PRT, pops and prints stack value
   HLT,  // HLT
   UNDEFINED_INS
@@ -33,16 +35,16 @@ static const char *RegisterNames[] = {
 };
 
 // How much to advance IP
-static int SkipTable[15] = {
-  [PSH] = 2, [ADD] = 1, [ADDN] = 2, [SUB] = 1,
+static int SkipTable[17] = {
+  [PSH] = 2,  [ADD] = 1, [ADDN] = 2, [SUB] = 1,
   [SUBN] = 2, [MUL] = 1, [MULN] = 2, [POP] = 1,
-  [SET] = 3, [GET] = 2, [IFG] = 1, [IFL] = 1,
-  [PRT] = 1, [HLT] = 0
+  [SET] = 3,  [GET] = 2, [IFG] = 1,  [IFL] = 1,
+  [IFE] = 1,  [IFN] = 1, [PRT] = 1, [HLT] = 0
 };
 
 #define PROGRAM_SIZE 1024
 #define STACK_SIZE 1024
-#define DEBUG_MODE 0
+#define DEBUG_MODE 1
 int program[PROGRAM_SIZE];
 int stack[STACK_SIZE];
 int registers[NUM_OF_REGISTERS];
@@ -168,6 +170,28 @@ void eval(int instr) {
 
       break;
     }
+    case IFE: {
+      mchk(2);
+
+      // if b == a perform next instruction
+      // else skip it
+      if (!(b == a)) {
+        skip_instruction(program[ip+1]);
+      }
+
+      break;
+    }
+    case IFN: {
+      mchk(2);
+
+      // if b != a perform next instruction
+      // else skip it
+      if (!(b != a)) {
+        skip_instruction(program[ip+1]);
+      }
+
+      break;
+    }
     case PRT: {
       // print whatever is in the stack
       int val_popped = stack[sp--];
@@ -219,6 +243,10 @@ int read_instruction(char *ins) {
     return IFG;
   } else if (strcmp(ins, "IFL") == 0) {
     return IFL;
+  } else if (strcmp(ins, "IFE") == 0) {
+    return IFE;
+  } else if (strcmp(ins, "IFN") == 0) {
+    return IFN;
   } else if (strcmp(ins, "PRT") == 0) {
     return PRT;
   } else if (strcmp(ins, "HLT") == 0) {

@@ -8,3 +8,16 @@ GET B
 GET A
 MUL
 HLT
+# ------
+# output:
+# PUSH 5
+# PUSH 6
+# ADD 11
+# POP 11
+# SET REG B TO 4
+# SET REG A TO 5
+# GET REG B 4
+# GET REG A 5
+# MUL 20
+# Halted successfully.
+# ------
