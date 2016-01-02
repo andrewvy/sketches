@@ -1,4 +1,4 @@
-# Simple Virtual Machine in C
+# Mini Virtual Machine
 
 Initial base code is from http://blog.felixangell.com/virtual-machine-in-c/
 

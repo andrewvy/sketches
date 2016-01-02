@@ -178,16 +178,19 @@ void read_program(FILE *file) {
     char *nl = strchr(line, '\n');
     if (nl) *nl = 0;
 
+	// This instruction is a comment, ignore.
+	if (line[0] == '#') continue;
+
     ins = strtok(line, " ");
     instruction = read_instruction(ins);
 
     if (!instruction) die("Undefined instruction in program. Exiting.");
     program[pc] = instruction;
 
-    // Skip instruction
+    // Run strtok again to skip over the current instruction.
     ins = strtok(NULL, " ");
 
-    // Set arguments
+    // Set the arguments for the rest of the instruction.
     while (ins != NULL) {
       pc++;
       arg = atoi(ins);

@@ -1,0 +1,6 @@
+# This is a comment
+# and should be ignored
+PSH 1
+PSH 2
+ADD
+HLT
