@@ -1,0 +1,7 @@
+PSH 1
+PSH 2
+# IFG 1 > 2 THEN SET
+IFG
+POP
+SET B 1
+HLT

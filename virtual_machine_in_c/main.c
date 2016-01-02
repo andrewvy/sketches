@@ -13,6 +13,8 @@ typedef enum {
   POP, // POP
   SET, // SET, register name, value
   GET, // GET, register name
+  IFG, // IFG, performs next instruction only if b>a
+  IFL, // IFL, performs next instruction only if b<a
   HLT,  // HLT
   UNDEFINED_INS
 } InstructionSet;
@@ -37,13 +39,16 @@ int registers[NUM_OF_REGISTERS];
 bool running = true;
 
 void die(const char *message) {
-  if (errno) {
-    perror(message);
-  } else {
-    printf("ERROR: %s\n", message);
-  }
-
+  printf("ERROR: %s\n", message);
   exit(1);
+}
+
+void pchk(int number) {
+  if (sp + number > STACK_SIZE) die("Stack pointer out of bounds");
+}
+
+void mchk(int number) {
+  if (sp - number < 0) die("Stack pointer out of bounds");
 }
 
 void eval(int instr) {
@@ -54,17 +59,20 @@ void eval(int instr) {
       break;
     }
     case PSH: {
+      pchk(1);
       sp++;
       stack[sp] = program[++ip];
       printf("PUSH %d\n", program[ip]);
       break;
     }
     case POP: {
+      mchk(1);
       int val_popped = stack[sp--];
       printf("POP %d\n", val_popped);
       break;
     }
     case ADD: {
+      mchk(2);
       int a = stack[sp--];
       int b = stack[sp--];
 
@@ -76,6 +84,7 @@ void eval(int instr) {
       break;
     }
     case SUB: {
+      mchk(2);
       int a = stack[sp--];
       int b = stack[sp--];
 
@@ -87,6 +96,7 @@ void eval(int instr) {
       break;
     }
     case MUL: {
+      mchk(2);
       int a = stack[sp--];
       int b = stack[sp--];
 
@@ -104,14 +114,50 @@ void eval(int instr) {
       break;
     }
     case GET: {
+      pchk(1);
       sp++;
       int reg = program[++ip];
       stack[sp] = registers[reg];
       printf("GET REG %s %d\n", RegisterNames[reg], registers[reg]);
       break;
     }
+    case IFG: {
+      mchk(2);
+      int a = stack[sp--];
+      int b = stack[sp--];
+      sp += 2;
+
+      // if b > a perform next instruction
+      // else skip it
+      //
+      // This is wrong, as we need to increment IP multiple times
+      // based on the following instruction
+      if (!(b > a)) {
+        ip++;
+      }
+
+
+      break;
+    }
+    case IFL: {
+      mchk(2);
+      int a = stack[sp--];
+      int b = stack[sp--];
+
+      // if b < a perform next instruction
+      // else skip it
+      //
+      // This is wrong, as we need to increment IP multiple times
+      // based on the following instruction
+      if (!(b < a)) {
+        ip++;
+      }
+
+      sp += 2;
+      break;
+    }
     case UNDEFINED_INS: {
-      perror("Undefined instruction. Exiting.\n");
+      die("Undefined instruction. Exiting.");
       running = false;
       break;
     }
@@ -130,20 +176,6 @@ FILE* load_from_file(const char *filename) {
   return file;
 }
 
-/*
-typedef enum {
-  PSH, // PSH, value
-  ADD, // ADD
-  SUB, // SUB
-  MUL, // MUL
-  POP, // POP
-  SET, // SET, register name, value
-  GET, // GET, register name
-  HLT,  // HLT
-  UNDEFINED_INS
-} InstructionSet;
-*/
-
 int read_instruction(char *ins) {
   if (strcmp(ins, "PSH") == 0) {
     return PSH;
@@ -159,6 +191,10 @@ int read_instruction(char *ins) {
     return SET;
   } else if (strcmp(ins, "GET") == 0) {
     return GET;
+  } else if (strcmp(ins, "IFG") == 0) {
+    return IFG;
+  } else if (strcmp(ins, "IFL") == 0) {
+    return IFL;
   } else if (strcmp(ins, "HLT") == 0) {
     return HLT;
   } else {
@@ -193,7 +229,27 @@ void read_program(FILE *file) {
     // Set the arguments for the rest of the instruction.
     while (ins != NULL) {
       pc++;
-      arg = atoi(ins);
+
+      if (strcmp(ins, "A") == 0) {
+        arg = A;
+      } else if (strcmp(ins, "B") == 0) {
+        arg = B;
+      } else if (strcmp(ins, "C") == 0) {
+        arg = C;
+      } else if (strcmp(ins, "D") == 0) {
+        arg = D;
+      } else if (strcmp(ins, "E") == 0) {
+        arg = E;
+      } else if (strcmp(ins, "F") == 0) {
+        arg = F;
+      } else if (strcmp(ins, "SP") == 0) {
+        arg = SP;
+      } else if (strcmp(ins, "IP") == 0) {
+        arg = IP;
+      } else {
+        arg = atoi(ins);
+      }
+
       program[pc] = arg;
       ins = strtok(NULL, " ");
     }
@@ -208,6 +264,12 @@ void clear_registers() {
   }
 }
 
+void clear_program() {
+  for (int i = 0; i < PROGRAM_SIZE; i++) {
+    program[i] = UNDEFINED_INS;
+  }
+}
+
 int main(int argc, char *argv[]) {
   if (argc < 2) die("Usage: mac <program_file>");
 
@@ -215,6 +277,7 @@ int main(int argc, char *argv[]) {
   FILE* file = load_from_file(filename);
 
   clear_registers();
+  clear_program();
   read_program(file);
 
   while (running) {
