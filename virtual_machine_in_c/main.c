@@ -64,6 +64,9 @@ void skip_instruction(int next_instruction) {
 }
 
 void eval(int instr) {
+  int a = stack[sp];
+  int b = stack[sp-1];
+
   switch (instr) {
     case HLT: {
       printf("Halted successfully.\n");
@@ -72,8 +75,7 @@ void eval(int instr) {
     }
     case PSH: {
       pchk(1);
-      sp++;
-      stack[sp] = program[++ip];
+      stack[++sp] = program[++ip];
       printf("PUSH %d\n", program[ip]);
       break;
     }
@@ -85,38 +87,24 @@ void eval(int instr) {
     }
     case ADD: {
       mchk(2);
-      int a = stack[sp--];
-      int b = stack[sp--];
-
       int result = b + a;
       printf("ADD %d\n", result);
-
-      sp++;
-      stack[sp] = result;
+      stack[++sp] = result;
       break;
     }
     case SUB: {
       mchk(2);
-      int a = stack[sp--];
-      int b = stack[sp--];
-
       int result = b - a;
       printf("SUB %d\n", result);
-
-      sp++;
-      stack[sp] = result;
+      stack[++sp] = result;
       break;
     }
     case MUL: {
       mchk(2);
-      int a = stack[sp--];
-      int b = stack[sp--];
-
       int result = b * a;
       printf("MUL %d\n", result);
 
-      sp++;
-      stack[sp] = result;
+      stack[++sp] = result;
       break;
     }
     case SET: {
@@ -127,16 +115,13 @@ void eval(int instr) {
     }
     case GET: {
       pchk(1);
-      sp++;
       int reg = program[++ip];
-      stack[sp] = registers[reg];
+      stack[++sp] = registers[reg];
       printf("GET REG %s %d\n", RegisterNames[reg], registers[reg]);
       break;
     }
     case IFG: {
       mchk(2);
-      int a = stack[sp-1];
-      int b = stack[sp-2];
 
       // if b > a perform next instruction
       // else skip it
@@ -149,8 +134,6 @@ void eval(int instr) {
     }
     case IFL: {
       mchk(2);
-      int a = stack[sp-1];
-      int b = stack[sp-2];
 
       // if b < a perform next instruction
       // else skip it
