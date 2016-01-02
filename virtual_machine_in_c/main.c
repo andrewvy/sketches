@@ -8,8 +8,11 @@
 typedef enum {
   PSH = 1, // PSH, value
   ADD, // ADD
+  ADDN, // ADDN by number
   SUB, // SUB
+  SUBN, // SUBN by number
   MUL, // MUL
+  MULN, // MULN by number
   POP, // POP
   SET, // SET, register name, value
   GET, // GET, register name
@@ -30,10 +33,10 @@ static const char *RegisterNames[] = {
 };
 
 // How much to advance IP
-static int SkipTable[12] = {
-  [PSH] = 2, [ADD] = 1, [SUB] = 1,
-  [MUL] = 1, [POP] = 1, [SET] = 3,
-  [GET] = 2, [IFG] = 1, [IFL] = 1,
+static int SkipTable[15] = {
+  [PSH] = 2, [ADD] = 1, [ADDN] = 2, [SUB] = 1,
+  [SUBN] = 2, [MUL] = 1, [MULN] = 2, [POP] = 1,
+  [SET] = 3, [GET] = 2, [IFG] = 1, [IFL] = 1,
   [PRT] = 1, [HLT] = 0
 };
 
@@ -94,6 +97,13 @@ void eval(int instr) {
       stack[++sp] = result;
       break;
     }
+    case ADDN: {
+      mchk(1);
+      int result = a + program[++ip];
+      if (DEBUG_MODE) printf("ADDN %d\n", result);
+      stack[++sp] = result;
+      break;
+    }
     case SUB: {
       mchk(2);
       int result = b - a;
@@ -101,11 +111,24 @@ void eval(int instr) {
       stack[++sp] = result;
       break;
     }
+    case SUBN: {
+      mchk(1);
+      int result = a - program[++ip];
+      if (DEBUG_MODE) printf("SUBN %d\n", result);
+      stack[++sp] = result;
+      break;
+    }
     case MUL: {
       mchk(2);
       int result = b * a;
       if (DEBUG_MODE) printf("MUL %d\n", result);
-
+      stack[++sp] = result;
+      break;
+    }
+    case MULN: {
+      mchk(1);
+      int result = a * program[++ip];
+      if (DEBUG_MODE) printf("MUL %d\n", result);
       stack[++sp] = result;
       break;
     }
@@ -176,10 +199,16 @@ int read_instruction(char *ins) {
     return PSH;
   } else if (strcmp(ins, "ADD") == 0) {
     return ADD;
+  } else if (strcmp(ins, "ADDN") == 0) {
+    return ADDN;
   } else if (strcmp(ins, "SUB") == 0) {
     return SUB;
+  } else if (strcmp(ins, "SUBN") == 0) {
+    return SUBN;
   } else if (strcmp(ins, "MUL") == 0) {
     return MUL;
+  } else if (strcmp(ins, "MULN") == 0) {
+    return MULN;
   } else if (strcmp(ins, "POP") == 0) {
     return POP;
   } else if (strcmp(ins, "SET") == 0) {
