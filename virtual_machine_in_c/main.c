@@ -141,9 +141,6 @@ void eval(int instr) {
 
       // if b > a perform next instruction
       // else skip it
-      //
-      // This is wrong, as we need to increment IP multiple times
-      // based on the following instruction
       if (!(b > a)) {
         skip_instruction(program[ip+1]);
       }
@@ -158,9 +155,6 @@ void eval(int instr) {
 
       // if b < a perform next instruction
       // else skip it
-      //
-      // This is wrong, as we need to increment IP multiple times
-      // based on the following instruction
       if (!(b < a)) {
         skip_instruction(program[ip+1]);
       }
