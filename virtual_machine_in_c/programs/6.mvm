@@ -1,0 +1,6 @@
+# This one has a syntax error, wrong num of arguments for PSH
+PSH 10
+PSH 20
+PSH 30
+PSH
+HLT

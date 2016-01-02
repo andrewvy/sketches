@@ -232,6 +232,8 @@ void read_program(FILE *file) {
   int pc = 0;
   int instruction = 0;
   int arg = 0;
+  int nargs = 0;
+  int line_number = 0;
   char line[100];
   char *ins;
 
@@ -239,9 +241,11 @@ void read_program(FILE *file) {
     if (fgets(line, 100, file) == NULL) break;
     char *nl = strchr(line, '\n');
     if (nl) *nl = 0;
+    line_number++;
 
-	// This instruction is a comment, ignore.
-	if (line[0] == '#') continue;
+    // This instruction is a comment, ignore.
+    if (line[0] == '#') continue;
+    nargs = pc;
 
     ins = strtok(line, " ");
     instruction = read_instruction(ins);
@@ -281,6 +285,11 @@ void read_program(FILE *file) {
     }
 
     pc++;
+
+    if ((pc - nargs) != SkipTable[instruction] && instruction != HLT) {
+      printf("Syntax error at L%d\n", line_number);
+      exit(1);
+    }
   }
 }
 
