@@ -15,6 +15,7 @@ typedef enum {
   GET, // GET, register name
   IFG, // IFG, performs next instruction only if b>a
   IFL, // IFL, performs next instruction only if b<a
+  PRT, // PRT, prints stack value
   HLT,  // HLT
   UNDEFINED_INS
 } InstructionSet;
@@ -29,15 +30,16 @@ static const char *RegisterNames[] = {
 };
 
 // How much to advance IP
-static int SkipTable[11] = {
+static int SkipTable[12] = {
   [PSH] = 2, [ADD] = 1, [SUB] = 1,
   [MUL] = 1, [POP] = 1, [SET] = 3,
   [GET] = 2, [IFG] = 1, [IFL] = 1,
-  [HLT] = 0
+  [PRT] = 1, [HLT] = 0
 };
 
 #define PROGRAM_SIZE 1024
 #define STACK_SIZE 1024
+#define DEBUG_MODE 0
 int program[PROGRAM_SIZE];
 int stack[STACK_SIZE];
 int registers[NUM_OF_REGISTERS];
@@ -76,33 +78,33 @@ void eval(int instr) {
     case PSH: {
       pchk(1);
       stack[++sp] = program[++ip];
-      printf("PUSH %d\n", program[ip]);
+      if (DEBUG_MODE) printf("PUSH %d\n", program[ip]);
       break;
     }
     case POP: {
       mchk(1);
       int val_popped = stack[sp--];
-      printf("POP %d\n", val_popped);
+      if (DEBUG_MODE) printf("POP %d\n", val_popped);
       break;
     }
     case ADD: {
       mchk(2);
       int result = b + a;
-      printf("ADD %d\n", result);
+      if (DEBUG_MODE) printf("ADD %d\n", result);
       stack[++sp] = result;
       break;
     }
     case SUB: {
       mchk(2);
       int result = b - a;
-      printf("SUB %d\n", result);
+      if (DEBUG_MODE) printf("SUB %d\n", result);
       stack[++sp] = result;
       break;
     }
     case MUL: {
       mchk(2);
       int result = b * a;
-      printf("MUL %d\n", result);
+      if (DEBUG_MODE) printf("MUL %d\n", result);
 
       stack[++sp] = result;
       break;
@@ -110,14 +112,14 @@ void eval(int instr) {
     case SET: {
       int reg = program[++ip];
       registers[reg] = program[++ip];
-      printf("SET REG %s TO %d\n", RegisterNames[reg], program[ip]);
+      if (DEBUG_MODE) printf("SET REG %s TO %d\n", RegisterNames[reg], program[ip]);
       break;
     }
     case GET: {
       pchk(1);
       int reg = program[++ip];
       stack[++sp] = registers[reg];
-      printf("GET REG %s %d\n", RegisterNames[reg], registers[reg]);
+      if (DEBUG_MODE) printf("GET REG %s %d\n", RegisterNames[reg], registers[reg]);
       break;
     }
     case IFG: {
@@ -141,6 +143,11 @@ void eval(int instr) {
         skip_instruction(program[ip+1]);
       }
 
+      break;
+    }
+    case PRT: {
+      // print whatever is in the stack
+      printf("%c", (char) stack[sp]);
       break;
     }
     case UNDEFINED_INS: {
@@ -182,6 +189,8 @@ int read_instruction(char *ins) {
     return IFG;
   } else if (strcmp(ins, "IFL") == 0) {
     return IFL;
+  } else if (strcmp(ins, "PRT") == 0) {
+    return PRT;
   } else if (strcmp(ins, "HLT") == 0) {
     return HLT;
   } else {
