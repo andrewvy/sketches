@@ -2,11 +2,15 @@
 
 Following tutorials from [wiki.osdev.org](http://wiki.osdev.org/)
 
-![image](https://cloud.githubusercontent.com/assets/2051361/12076705/5d493eee-b16b-11e5-852c-8136e20fa0d6.png)
+![image](https://cloud.githubusercontent.com/assets/2051361/12077248/84b82ce6-b18f-11e5-9aba-aee95650b0f5.png)
 
 ----
 
-Run `build.sh`. i686-elf-gcc is required for cross compilation.
+Run `build.sh`. `i686-elf-gcc` is required for cross compilation.
+
+OS iso is a ["el torito no-emulation" bootable CD](http://wiki.osdev.org/Bootable_El-Torito_CD_with_GRUB_Legacy)
+
+---
 
 You can assemble a bootable image:
 

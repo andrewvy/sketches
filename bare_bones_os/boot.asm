@@ -56,6 +56,10 @@ _start:
 	; our stack (as it grows downwards).
 	mov esp, stack_top
 
+	; Initialize core kernel
+	extern kernel_early
+	call kernel_early
+
 	; We are now ready to actually execute C code. We cannot embed that in an
 	; assembly file, so we'll create a kernel.c file in a moment. In that file,
 	; we'll create a C entry point called kernel_main and call it here.

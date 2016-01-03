@@ -124,12 +124,12 @@ if [ ! -d ./$include/ ]; then
 fi
 
 #download, extract and copy nessesary grub file
-if [ ! -f ./stage2_eltorito.bin ]; then
+if [ ! -f ./include/stage2_eltorito.bin ]; then
     echo "Downloading grub el torito"
 	curl -get http://ijmul.com/dnlds/grub_files.tar.gz -o grub.tar.gz
 	mkdir ./grub
 	tar -xf grub.tar.gz -C ./grub
-	cp ./grub/stage2_eltorito stage2_eltorito.bin
+	cp ./grub/stage2_eltorito ./include/stage2_eltorito.bin
 	rm -rf ./grub
 	rm ./grub.tar.gz
 fi
@@ -178,7 +178,7 @@ find ./ -type f -name "*.c" |\
 {
 while read c; do
 	((C++))
-	i686-elf-gcc -c $c -o ${c%.*}".o" -std=gnu99 -ffreestanding -O2 -Wall -Wextra
+	i686-elf-gcc -c $c -o ${c%.*}".o" -std=gnu99 -ffreestanding -O2 -Wall -Wextra -Isrc/include -Isrc/include/libc
 done
 echo "Compiled $C C files"
 }
@@ -191,7 +191,7 @@ find ./ -type f -name "*.cpp" |\
 {
 while read c; do
 	((CPP++))
-	i586-elf-g++ -c $c -o ${c%.*}".o" -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti 
+	i586-elf-g++ -c $c -o ${c%.*}".o" -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti -Isrc/include
 done
 echo "Compiled $CPP C++ files"
 }
@@ -210,11 +210,7 @@ i686-elf-gcc -T linker.ld -o $osname".bin" -ffreestanding -O2 -nostdlib $(find .
 mv $osname".bin" ./os/boot
 
 #copy grub
-cp stage2_eltorito.bin ./os/boot/grub/stage2_eltorito.bin
-
-#configure grub
-echo -e "default 0\n#timeout 30\n#title Boot from hard disk\n#chainloader (hd0)+1\ntitle $osname\nkernel /boot/$osname.bin" >> ./boot/grub/menu.lst
-echo -e "menuentry \"os\" {\nmultiboot /boot/os.bin\n}" >> ./os/boot/grub/grub.cfg
+cp ./include/stage2_eltorito.bin ./os/boot/grub/stage2_eltorito.bin
 
 #remove all object files (.o for c and c++ files, .ao for assembled files)
 find ./ -type f \( -name "*.o" -or -name "*.ao" \) | while read o; do
@@ -222,7 +218,7 @@ find ./ -type f \( -name "*.o" -or -name "*.ao" \) | while read o; do
 done
 
 #create bootable iso
-mkisofs -R -b boot/grub/stage2_eltorito.bin -no-emul-boot -boot-load-size 4 -boot-info-table -o $osname".iso" ./os
+mkisofs -R -b boot/grub/stage2_eltorito.bin -no-emul-boot -boot-load-size 4 -boot-info-table -o os/$osname".iso" ./os
 
 echo ""
 
