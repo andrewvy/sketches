@@ -27,6 +27,10 @@ void terminal_setcolor(uint8_t color) {
   terminal_color = color;
 }
 
+uint8_t terminal_getcolor(void) {
+  return terminal_color;
+}
+
 void terminal_putentryat(char c, uint8_t color, size_t x, size_t y) {
   const size_t index = y * VGA_WIDTH + x;
   terminal_buffer[index] = make_vgaentry(c, color);
@@ -34,12 +38,21 @@ void terminal_putentryat(char c, uint8_t color, size_t x, size_t y) {
 
 void terminal_putchar(char c) {
   if (c == '\n') {
+    // Character is a newline
     terminal_column = 0;
 
     if (++terminal_row == VGA_HEIGHT) {
       terminal_row = 0;
     }
 
+    return;
+  } else if (c == '\b') {
+    // Character is a backspace
+    if (terminal_color > 0) {
+      --terminal_column;
+    }
+
+    terminal_putentryat(' ', terminal_color, terminal_column, terminal_row);
     return;
   }
 
@@ -59,4 +72,8 @@ void terminal_write(const char* data, size_t size) {
 
 void terminal_writestring(const char* data) {
   terminal_write(data, strlen(data));
+}
+
+void terminal_kbdinput(const char c) {
+  terminal_putchar(c);
 }

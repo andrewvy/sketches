@@ -1,5 +1,7 @@
 global _gdt_flush
 extern _gp
+
+; Update the GDT table
 _gdt_flush:
 	lgdt [_gp]
 	mov ax, 0x10

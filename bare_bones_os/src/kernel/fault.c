@@ -1,4 +1,5 @@
 #include <kernel/fault.h>
+#include <kernel/util/log.h>
 
 const char *exception_messages[] = {
   "Division By Zero",
@@ -36,7 +37,7 @@ const char *exception_messages[] = {
 };
 
 void isrs_install() {
-  terminal_writestring("Installing ISRS\n");
+  kernel_log("os", "Installing ISRS\n");
 
   idt_set_gate(0,  (unsigned)_isr0,  0x08, 0x8E);
   idt_set_gate(1,  (unsigned)_isr1,  0x08, 0x8E);
@@ -76,7 +77,7 @@ void isrs_install() {
 }
 
 void _fault_handler(struct regs *r) {
-  terminal_writestring("Fault Handler\n");
+  kernel_log("os", "Fault Handler\n");
   if (r->int_no < 32) {
     // Display exception that occured and halt system
     terminal_writestring(exception_messages[r->int_no]);

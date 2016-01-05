@@ -1,6 +1,8 @@
+#include <string.h>
+
 #include <kernel/idt.h>
 #include <kernel/tty.h>
-#include <string.h>
+#include <kernel/util/log.h>
 
 struct idt_entry idt[256];
 struct idt_ptr _idtp;
@@ -16,7 +18,7 @@ void idt_set_gate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags) {
 
 // Installs the IDT
 void idt_install() {
-  terminal_writestring("Installing IDT\n");
+  kernel_log("os", "Installing IDT\n");
 
   // Sets up the special IDT pointer
   _idtp.limit = (sizeof(struct idt_entry) * 256 -1);
@@ -28,7 +30,7 @@ void idt_install() {
   uint32_t check = idt[0].base_lo;
 
   if (!check) {
-    terminal_writestring("IDT zeroed successfully\n");
+    kernel_log("os", "Cleared old IDT successfully\n");
   }
 
   _idt_load();

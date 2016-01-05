@@ -1,4 +1,5 @@
 #include <kernel/gdt.h>
+#include <kernel/util/log.h>
 
 // Setup descriptor in the Global Descriptor Table
 void gdt_set_gate(uint32_t num, uint64_t base, uint64_t limit, uint8_t access, uint8_t gran) {
@@ -23,7 +24,7 @@ void gdt_set_gate(uint32_t num, uint64_t base, uint64_t limit, uint8_t access, u
  * the segment registers
  */
 void gdt_install() {
-  terminal_writestring("Installing GDT\n");
+  kernel_log("os", "Installing GDT\n");
   _gp.limit = (sizeof(struct gdt_entry) * 3) - 1;
   _gp.base = (uint32_t) &gdt;
 

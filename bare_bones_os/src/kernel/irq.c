@@ -1,6 +1,7 @@
 #include <kernel/irq.h>
 #include <kernel/portio.h>
 #include <kernel/tty.h>
+#include <kernel/util/log.h>
 
 void *irq_routines[16] = {
   0, 0, 0, 0, 0, 0, 0, 0,
@@ -32,7 +33,7 @@ void irq_remap(void) {
 
 void irq_install() {
   irq_remap();
-  terminal_writestring("Installing IRQs\n");
+  kernel_log("os", "Installing IRQs\n");
 
   idt_set_gate(32, (unsigned)_irq0,  0x08, 0x8E);
   idt_set_gate(33, (unsigned)_irq1,  0x08, 0x8E);
