@@ -1,5 +1,5 @@
-#ifndef PORTIO_H
-#define PORTIO_H
+#ifndef _PORTIO_H
+#define _PORTIO_H
 
 #include <stdint.h>
 
@@ -10,8 +10,13 @@ struct regs {
   uint32_t eip, cs, eflags, useresp, ss;
 };
 
-unsigned char inportb(unsigned short _port);
+void outportb(uint16_t _port, uint8_t _data);
+uint8_t inportb(uint16_t port);
 
-void outportb(unsigned short _port, unsigned char _data);
+uint16_t inportw(uint16_t port);
+void outportw(uint16_t port, uint16_t value);
+
+uint32_t inportl(uint16_t port);
+void outportl(uint16_t port, uint32_t value);
 
 #endif

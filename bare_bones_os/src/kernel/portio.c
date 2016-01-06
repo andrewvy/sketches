@@ -1,11 +1,31 @@
 #include <kernel/portio.h>
 
-unsigned char inportb(unsigned short _port) {
-  unsigned char rv;
-  __asm__ __volatile__ ("inb %1, %0" : "=a" (rv) : "dN" (_port));
-  return rv;
+uint8_t inportb(uint16_t port) {
+  uint8_t value;
+  asm volatile("inb %%dx, %%al":"=a" (value):"d" (port));
+  return value;
 }
 
-void outportb(unsigned short _port, unsigned char _data) {
-  __asm__ __volatile__ ("outb %1, %0" : : "dN" (_port), "a" (_data));
+uint16_t inportw(uint16_t port) {
+  uint16_t value;
+  asm volatile("inw %%dx, %%ax":"=a" (value):"d" (port));
+  return value;
+}
+
+uint32_t inportl(uint16_t port) {
+  uint32_t value;
+  asm volatile("in %%dx, %%eax":"=a" (value):"d" (port));
+  return value;
+}
+
+void outportb(uint16_t port, uint8_t value) {
+  asm volatile("outb %%al, %%dx"::"d" (port), "a" (value));
+}
+
+void outportw(uint16_t port, uint16_t value) {
+  asm volatile("outw %%ax, %%dx"::"d" (port), "a" (value));
+}
+
+void outportl(uint16_t port, uint32_t value) {
+  asm volatile("out %%eax, %%dx"::"d" (port), "a" (value));
 }

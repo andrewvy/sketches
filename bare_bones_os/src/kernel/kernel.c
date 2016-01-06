@@ -34,7 +34,7 @@ void kernel_main(void) {
   }
 }
 
-void panic(const char *msg, const char *file, uint32 line) {
+void panic(const char *msg, const char *file) {
   kernel_log("kernel", "KERNEL PANIC");
   kernel_log("kernel", msg);
   kernel_log("file", file);

@@ -6,6 +6,6 @@
 
 #define PANIC(msg) panic(msg, __FILE__, __LINE__);
 
-void panic(const char *msg, const char *file, uint32 line);
+void panic(const char *msg, const char *file);
 
 #endif

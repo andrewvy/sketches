@@ -2,6 +2,7 @@
 #define _KERNEL_VGA_H
 
 #include <stdint.h>
+#include <kernel/portio.h>
 
 enum vga_color {
   COLOR_BLACK = 0,
@@ -35,6 +36,8 @@ static inline uint16_t make_vgaentry(char c, uint8_t color) {
 static const size_t VGA_WIDTH = 80;
 static const size_t VGA_HEIGHT = 25;
 
+static uint16_t* const VGA_SCREEN_CTRL = (uint16_t*) 0x3D4;
+static uint16_t* const VGA_SCREEN_DATA = (uint16_t*) 0x3D5;
 static uint16_t* const VGA_MEMORY = (uint16_t*) 0xB8000;
 
 #endif
