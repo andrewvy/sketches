@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdio.h>
 
+#include <kernel/kernel.h>
 #include <kernel/tty.h>
 #include <kernel/gdt.h>
 #include <kernel/fault.h>
@@ -31,4 +32,10 @@ void kernel_main(void) {
 
   for (;;) {
   }
+}
+
+void panic(const char *msg, const char *file, uint32 line) {
+  kernel_log("kernel", "KERNEL PANIC");
+  kernel_log("kernel", msg);
+  kernel_log("file", file);
 }

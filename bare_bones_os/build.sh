@@ -222,13 +222,15 @@ mkisofs -R -b boot/grub/stage2_eltorito.bin -no-emul-boot -boot-load-size 4 -boo
 
 echo ""
 
-#run virtualbox
+
+#run qemu
 if [ "$autovm" == "true" ]; then
-	if hash virtualbox 2>/dev/null; then
+	if hash qemu-system-i386 2>/dev/null; then
 		echo "Executing VM $vmname"
-		virtualbox --startvm $vmname --dbg
+		qemu-system-i386 -kernel os/boot/$osname".bin"
 	else
-		echo "Virtualbox not found"
+		echo "qemu-system-i386 not found"
 	fi
 fi
+
 echo "done!"
