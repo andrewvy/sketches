@@ -8,6 +8,7 @@ Journal of my research notes / ideas as I try to learn different aspects of CS.
 - [Merkle Trees](https://github.com/andrewvy/sketches/tree/master/merkle_trees)
 - [Learn C The Hard Way](https://github.com/andrewvy/sketches/tree/master/learn_c_the_hard_way)
 - [Learn Rust The Hard Way](https://github.com/andrewvy/sketches/tree/master/learn_rust_the_hard_way)
+- [Learn Python The Hard Way](https://github.com/andrewvy/sketches/tree/master/learn_python_the_hard_way)
 - [K&R - The C Programming Language](https://github.com/andrewvy/sketches/tree/master/k_and_r)
 - [ncurses](https://github.com/andrewvy/sketches/tree/master/ncurses)
 - [All Kinds of Hashes](https://github.com/andrewvy/sketches/tree/master/hashes)
